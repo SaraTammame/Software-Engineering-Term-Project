@@ -192,3 +192,30 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# added some gitignore for conda envs
+# Conda environment directories (if you create local envs)
+env/
+.env/
+
+# Conda package caches (optional, usually outside project dir)
+.conda/
+conda-meta/
+
+# Conda environment lock files (if you use them and don't want to track)
+*.conda
+*.conda.lock
+
+# Python cache and virtualenvs (common in Conda projects)
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VSCode and other editor settings (optional)
+.vscode/
+.idea/
