@@ -108,7 +108,7 @@ ipython_config.py
 #poetry.lock
 
 # pdm
-#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
+#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
 #pdm.lock
 #   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
 #   in version control.
@@ -198,24 +198,5 @@ cython_debug/
 env/
 .env/
 
-# Conda package caches (optional, usually outside project dir)
-.conda/
-conda-meta/
-
-# Conda environment lock files (if you use them and don't want to track)
-*.conda
-*.conda.lock
-
-# Python cache and virtualenvs (common in Conda projects)
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.pyc
-
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
-
-# VSCode and other editor settings (optional)
-.vscode/
-.idea/
+# Configuration files with sensitive data
+config.py
