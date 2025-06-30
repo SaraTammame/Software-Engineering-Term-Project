@@ -5,7 +5,13 @@ from app.models import test_insert, test_query
 def create_app():
     app = Flask(__name__)
 
-    app.config["MONGO_URI"] = "mongodb+srv://hachoj:yJsUEtLxpnqobesK@yafa-db.yvwbol0.mongodb.net/flask_app?retryWrites=true&w=majority&appName=yafa-db"
+    try:
+        from config import Config
+        mongo_uri = Config.MONGO_URI
+    except ImportError:
+        raise ValueError("MONGO_URI not found in config.py")
+    
+    app.config["MONGO_URI"] = mongo_uri
     mongo = PyMongo(app)
     app.mongo = mongo
 
