@@ -16,14 +16,16 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Result</th>
+                                <th>User ID</th>
+                                <th>Username</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for item in query_result %}
+                            {% for user in query_result %}
                             <tr>
                                 <td>{{ loop.index }}</td>
-                                <td>{{ item }}</td>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.username }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
