@@ -14,7 +14,12 @@ user_bp = Blueprint("user", __name__)
 #     return {"users": [user.to_dict() for user in users]}
 
 
-@user_bp.route("/", methods=["POST"])
+@user_bp.route("/", methods=["POST", "GET"])
+def home():
+    # This route renders the home page
+    return render_template("home.html")
+
+@user_bp.route("/insert", methods=["POST"])
 def insert_sample_rows():
     test_insert()
     return render_template("insert.html")
