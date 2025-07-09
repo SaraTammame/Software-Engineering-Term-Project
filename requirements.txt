@@ -1,3 +1,0 @@
-# python version 3.13
-Flask
-flask-pymongo
