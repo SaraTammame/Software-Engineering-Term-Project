@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>YAFA</title>
-         <link href="https://fonts.googleapis.com/css?family=Lato: 100,300,400,700|Luckiest+Guy|Oxygen:300,400" rel="stylesheet">
-        <link href="../static/style.css" type="text/css" rel="stylesheet">
-    </head>
-    <body>
-        <ul class="navigation">
-            <li class="active"><a href="./">Home</a></li>
-            <li><a href="./auth">Authentication</a></li>
-            <li><a href="./journal">Journal</a></li>
-            <li><a href="./progress">Progress</a></li>
-            <li><a href="./settings">Settings</a></li>
-        </ul>
-        <h1>Welcome to Yet Another Fitness App!</h1>
-        <p>This is the home page of the YAFA application. <em>Eventually to be locked behind login screen.</em></p>
-        </body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block header %}
+    <h1>Welcome to Yet Another Fitness App!</h1>
+{% endblock %}
+{% block body %}
+    <p>This is the home page of the YAFA application. <em>Eventually to be locked behind login screen.</em></p>
+{% endblock %}
