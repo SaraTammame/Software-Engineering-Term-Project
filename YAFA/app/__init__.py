@@ -41,8 +41,14 @@ def create_app(test_config=None):
     def home():
         return render_template('home.html')
 
+    @app.route('/auth')
+    def auth():
+        return render_template('auth.html')
 #     from app.routes import user_routes
 
+    @app.route('/journal')
+    def journal():
+        return render_template('journal.html')
 #     app.register_blueprint(user_routes.user_bp)
 
     return app
