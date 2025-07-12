@@ -1,19 +1,13 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>
-            YAFA - Authentication Page
-        </title>
-        <link href="../static/style.css" type="text/css" rel="stylesheet">
-    </head>
-    <body>
-        <ul class="navigation">
-            <li><a href="./">Home</a></li>
-            <li class="active"><a href="./auth">Authentication</a></li>
-            <li><a href="./journal">Journal</a></li>
-            <li><a href="./progress">Progress</a></li>
-            <li><a href="./settings">Settings</a></li>
-        </ul>
-        <h1>Welcome to the YAFA Authentication Page!</h1>
-        <p>This is where you can log in to access your fitness data.</p>
-    </body>
+{% extends "base.html" %}
+
+{% block title %}
+    Authentication
+{% endblock %}
+
+{% block header %}
+    <h1>YAFA Authentication</h1>
+{% endblock %}
+
+{% block body %}
+    <p>This is the authentication page of the YAFA application. Here you can log in or register. <em>To be implemented.</em></p>
+{% endblock %}
