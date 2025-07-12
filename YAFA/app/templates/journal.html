@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>YAFA - Journal</title>
-         <link href="https://fonts.googleapis.com/css?family=Lato: 100,300,400,700|Luckiest+Guy|Oxygen:300,400" rel="stylesheet">
-        <link href="../static/style.css" type="text/css" rel="stylesheet">
-    </head>
-    <body>
-        <ul class="navigation">
-            <li><a href="./">Home</a></li>
-            <li><a href="./auth">Authentication</a></li>
-            <li class="active"><a href="./journal">Journal</a></li>
-            <li><a href="./progress">Progress</a></li>
-            <li><a href="./settings">Settings</a></li>
-        </ul>
-        <h1>Workout Journal</h1>
-        <p>This is the Workout Journal of the YAFA application. <em>Eventually to be locked behind login screen.</em></p>
-        </body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}
+   Journal 
+{% endblock %}
+
+{% block header %}
+    <h1>Workout Journal</h1>
+{% endblock %}
+{% block body %}
+    <p>This is the workout journal. <em>To be implemented.</em></p>
+{% endblock %}
