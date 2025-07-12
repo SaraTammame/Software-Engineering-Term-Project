@@ -17,6 +17,13 @@ TBD.
 ## Tech-stack
 
  - Flask
- - MongoDB
+ - Neon
  - Bootstrap
 
+# Development Instructions
+## Installation
+After forking and cloning this repository, navigate through using `cd SOFTWARE-ENGINEERING-TERM-PROJECT/YAFA/app`. 
+Here, following the installation instructions according to [Flask documentation](https://flask.palletsprojects.com/en/stable/installation/#:~:text=Create%20an-,environment,-%C2%B6).
+Use git best practices.\
+
+Then, once you've activated the environment, navigate the directory containing `requirements.txt` and perform `pip install -r requirements.txt`.
