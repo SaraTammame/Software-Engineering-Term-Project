@@ -5,10 +5,10 @@ from app.model.user import User
 def test_insert():
 
     sample_users = [
-        {"id": 1, "username": "harry"},
-        {"id": 2, "username": "trican"},
-        {"id": 3, "username": "minh"},
-        {"id": 4, "username": "sara"},
+        {"id": 1, "username": "harry", "password": "123456"},
+        {"id": 2, "username": "trican", "password": "123456"},
+        {"id": 3, "username": "minh", "password": "123456"},
+        {"id": 4, "username": "sara", "password": "123456"},
     ]
 
     for entry in sample_users:
