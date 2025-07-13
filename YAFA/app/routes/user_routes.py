@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, redirect, url_for
 from app import db
 from app.model.user import User
+from app.model.workout import Workout
 from app.model.test_model import test_insert
+from app.model.workout_add import add_workout
 
 # Create a Blueprint named 'user'
 user_bp = Blueprint("user", __name__)
@@ -32,7 +34,52 @@ def journal():
 def data_base_test():
     test_insert()
     users = User.query.all()
-    return render_template("data_base_test.html", query_result=users)
+    workouts = Workout.query.all()
+    return render_template(
+        "data_base_test.html",
+        user_query_result=users,
+        workout_query_result=workouts,
+    )
+
+
+@user_bp.route("/add_workout", methods=["GET", "POST"])
+def add_workout_page():
+    error_message = None
+    if request.method == "POST":
+        try:
+            workout_id_str = request.form.get("workout_id")
+            user_id = int(request.form["user_id"])
+            workout_date = request.form["workout_date"]
+            workout_type = request.form["workout_type"]
+            workout_duration = int(request.form["workout_duration"])
+            workout_distance = float(request.form["workout_distance"])
+            workout_calories = int(request.form["workout_calories"])
+            workout_notes = request.form["workout_notes"]
+            workout_id = int(workout_id_str) if workout_id_str else None
+        except ValueError:
+            error_message = "Invalid input: Please enter valid numbers for ID, duration, distance, and calories."
+        else:
+            user = User.query.get(user_id)
+            if user is None:
+                error_message = f"User with ID {user_id} does not exist."
+            elif workout_id is not None and Workout.query.get(workout_id):
+                error_message = f"Workout with ID {workout_id} already exists."
+            else:
+                add_workout(
+                    user_id,
+                    workout_date,
+                    workout_type,
+                    workout_duration,
+                    workout_distance,
+                    workout_calories,
+                    workout_notes,
+                    workout_id=workout_id,
+                )
+                return redirect(url_for("user.add_workout_page"))
+    workouts = Workout.query.all()
+    return render_template(
+        "add_workout.html", workout_query_result=workouts, error_message=error_message
+    )
 
 
 # register the blueprint
