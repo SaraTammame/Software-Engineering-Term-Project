@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template
+from app import db
 from app.model.user import User
 from app.model.test_model import test_insert
 
@@ -6,18 +7,10 @@ from app.model.test_model import test_insert
 user_bp = Blueprint("user", __name__)
 
 
-# # Define routes for this blueprint
-# @user_bp.route("/users", methods=["GET"])
-# def get_users():
-#     # This route uses the User model to get data from database
-#     users = User.query.all()
-#     return {"users": [user.to_dict() for user in users]}
-
-
 @user_bp.route("/", methods=["POST", "GET"])
 def home():
-    # This route renders the home page
     return render_template("home.html")
+
 
 @user_bp.route("/insert", methods=["POST"])
 def insert_sample_rows():
@@ -25,17 +18,23 @@ def insert_sample_rows():
     return render_template("insert.html")
 
 
-@user_bp.route("/users", methods=["GET"])
-def get_users():
-    # This route uses the User model to get data from database
+@user_bp.route("/auth", methods=["POST", "GET"])
+def auth():
+    return render_template("auth.html")
+
+
+@user_bp.route("/journal", methods=["POST", "GET"])
+def journal():
+    return render_template("journal.html")
+
+
+@user_bp.route("/data_base_test", methods=["GET"])
+def data_base_test():
+    test_insert()
     users = User.query.all()
-    return render_template("users.html", users=users)
+    return render_template("data_base_test.html", query_result=users)
 
 
-@user_bp.route("/users/<int:user_id>", methods=["GET"])
-def get_user(user_id):
-    # This route uses the User model to get a specific user
-    user = User.query.get(user_id)
-    if user:
-        return user.to_dict()
-    return {"error": "User not found"}, 404
+# register the blueprint
+def register_blueprints(app):
+    app.register_blueprint(user_bp)
