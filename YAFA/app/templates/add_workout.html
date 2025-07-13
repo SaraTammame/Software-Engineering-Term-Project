@@ -36,34 +36,52 @@
 <div class="container-fluid py-5" style="background-color: #89CFF0;">
   <div class="row align-items-center justify-content-center">
     <div class="col-md-8">
-      <h1 class="display-4 fw-bold text-white mb-4">User Query Results</h1>
-      <div class="card bg-white shadow">
+      <h1 class="display-4 fw-bold text-white mb-4">All Workouts</h1>
+
+      <div class="card bg-white shadow mt-4">
         <div class="card-body">
-          <table class="table table-bordered table-hover">
-            <thead class="table-dark">
-              <tr>
-                <th>#</th>
-                <th>User ID</th>
-                <th>Username</th>
-                <th>Password</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for user in user_query_result %}
-              <tr>
-                <td>{{ loop.index }}</td>
-                <td>{{ user.id }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.password }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+          <h2>Add New Workout</h2>
+          <form method="POST">
+            <div class="mb-3">
+              <label for="workout_id" class="form-label">Workout ID</label>
+              <input type="number" class="form-control" id="workout_id" name="workout_id">
+            </div>
+            <div class="mb-3">
+              <label for="user_id" class="form-label">User ID</label>
+              <input type="number" class="form-control" id="user_id" name="user_id" required>
+            </div>
+            <div class="mb-3">
+              <label for="workout_date" class="form-label">Workout Date</label>
+              <input type="date" class="form-control" id="workout_date" name="workout_date" required>
+            </div>
+            <div class="mb-3">
+              <label for="workout_type" class="form-label">Workout Type</label>
+              <input type="text" class="form-control" id="workout_type" name="workout_type" required>
+            </div>
+            <div class="mb-3">
+              <label for="workout_duration" class="form-label">Duration (minutes)</label>
+              <input type="number" class="form-control" id="workout_duration" name="workout_duration" required>
+            </div>
+            <div class="mb-3">
+              <label for="workout_distance" class="form-label">Distance (km)</label>
+              <input type="number" step="0.1" class="form-control" id="workout_distance" name="workout_distance" required>
+            </div>
+            <div class="mb-3">
+              <label for="workout_calories" class="form-label">Calories</label>
+              <input type="number" class="form-control" id="workout_calories" name="workout_calories" required>
+            </div>
+            <div class="mb-3">
+              <label for="workout_notes" class="form-label">Notes</label>
+              <textarea class="form-control" id="workout_notes" name="workout_notes"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Workout</button>
+          </form>
+          {% if error_message %}
+          <div class="alert alert-danger mt-3">{{ error_message }}</div>
+          {% endif %}
         </div>
       </div>
-    </div>
-    <div class="col-md-8">
-      <h1 class="display-4 fw-bold text-white mb-4">Workout Query Results</h1>
+
       <div class="card bg-white shadow">
         <div class="card-body">
           <table class="table table-bordered table-hover">
