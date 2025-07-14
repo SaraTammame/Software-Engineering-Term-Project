@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from app import db
 from app.model.user import User
 from app.model.workout import Workout
+from app.model.journal import Journal
 from app.model.test_model import test_insert
 from app.model.workout_add import add_workout
 
@@ -27,6 +28,34 @@ def auth():
 
 @user_bp.route("/journal", methods=["POST", "GET"])
 def journal():
+    users = User.query.all()
+    entry = Journal.query.all()
+    if request.method == "POST":
+        try:
+            user_id = int(request.form["user_id"])
+            entry_date = request.form["entry_date"]
+            entry_title = request.form["entry_title"]
+            entry_content = request.form["entry_content"]
+        except ValueError:
+            error_message = "Invalid input: Please enter valid numbers for ID."
+        else:
+            user = User.query.get(user_id)
+            if user is None:
+                error_message = f"User with ID {user_id} does not exist."
+            else:
+                new_entry = Journal(
+                    user_id=user_id,
+                    entry_date=entry_date,
+                    entry_title=entry_title,
+                    entry_content=entry_content,
+                )
+                db.session.add(new_entry)
+                db.session.commit()
+                return redirect(url_for("user.journal"))
+    return render_template("journal.html", user_query_result=users, journal_query_result=entry)
+
+def add_journal_entry():
+    
     return render_template("journal.html")
 
 
