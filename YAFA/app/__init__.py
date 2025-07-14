@@ -3,8 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
-# right now this will throw an error when ran
-# from app.notifications.notifications import init_notifications
 
 load_dotenv()
 
@@ -30,7 +28,8 @@ def create_app():
 
     user_routes.register_blueprints(app)
 
-    # right now this won't work
-    # init_notifications(app)
+    from app.notifications.notifications import init_notifications
+
+    init_notifications(app)
 
     return app
