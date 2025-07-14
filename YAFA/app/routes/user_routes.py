@@ -19,6 +19,7 @@ def home():
     # This route renders the home page
     return render_template("home.html")
 
+
 @user_bp.route("/insert", methods=["POST"])
 def insert_sample_rows():
     test_insert()

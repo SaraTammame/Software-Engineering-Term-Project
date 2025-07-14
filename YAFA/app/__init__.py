@@ -3,11 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
+# right now this will throw an error when ran
+# from app.notifications.notifications import init_notifications
 
 load_dotenv()
 
 db = SQLAlchemy()
 # migrate = Migrate()
+
 
 def create_app(test_config=None):
 
@@ -50,5 +53,8 @@ def create_app(test_config=None):
     def journal():
         return render_template('journal.html')
 #     app.register_blueprint(user_routes.user_bp)
+
+    # right now this won't work
+    # init_notifications(app)
 
     return app
