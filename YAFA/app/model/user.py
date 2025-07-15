@@ -17,3 +17,19 @@ class User(db.Model):
             "username": self.username,
             "password": self.password,
         }
+
+
+def insert_user_data(id, username, password):
+
+    # Accept only signed 32-bit integer primary keys for now.
+    MAX_INT32 = 2**31 - 1
+    if not isinstance(id, int) or id < 0 or id > MAX_INT32:
+        raise ValueError(
+            f"id must be a signed 32-bit integer (0 – {MAX_INT32}); got {id}"
+        )
+
+    if not User.query.filter_by(id=id).first():
+        obj = User(id=id, username=username, password=password)
+        db.session.add(obj)
+
+    db.session.commit()
