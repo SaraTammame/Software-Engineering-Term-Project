@@ -4,3 +4,9 @@ flask-sqlalchemy
 psycopg2-binary
 python-dotenv
 flask-migrate
+
+# Testing dependencies
+pytest
+pytest-flask
+pytest-cov
+factory-boy
