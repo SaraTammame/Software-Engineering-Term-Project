@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Project UI</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+    <h1>Python Project Dashboard</h1>
+</header>
+
+<main class="container">
+    <section>
+        <input type="text" placeholder="Enter your data" id="inputField">
+        <button onclick="processInput()">Submit</button>
+    </section>
+
+    <section id="outputSection">
+        <h2>Output</h2>
+        <div id="outputBox">Results will appear here.</div>
+    </section>
+</main>
+
+<footer>
+    &copy; 2025 Your Name
+</footer>
+
+<script>
+    function processInput() {
+        const input = document.getElementById('inputField').value;
+        document.getElementById('outputBox').innerText = 'Processed: ' + input;
+    }
+</script>
+
+</body>
+</html>
