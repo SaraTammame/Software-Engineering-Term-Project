@@ -1,7 +1,26 @@
+/* ===== YAFA Design Tokens ===== */
+:root {
+  /* palette */
+  --color-primary: #4a7245; /* earthy green */
+  --color-primary-dark: #2f4e30;
+  --color-primary-light: #8fbc8f;
+  --color-background: #f4f1eb; /* warm off-white */
+  --color-surface: #fffdfa; /* natural white */
+  --color-text: #212529;
+
+  /* typography */
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Playfair Display', serif;
+
+  /* bootstrap override */
+  --bs-primary: var(--color-primary);
+}
+
 body {
-  background: #EEE;
+  background: var(--color-background);
   margin: 0;
   padding: 0;
+  padding-top: 70px; /* offset for fixed navbar */
 }
 
 /* Navigation */
@@ -39,6 +58,67 @@ li {
 
 .active {
   color: #88CCF1;
+}
+
+/* Navigation – Bootstrap navbar overrides */
+.navbar {
+  background-color: var(--color-primary);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Floating tile style */
+.navbar-tile {
+  background-color: var(--color-primary-dark);
+  border-radius: 2rem;
+  width: calc(100% - 2rem);
+  margin: 10px auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  top: 10px; /* slight gap from top border */
+  min-height: 48px; /* consistent slim height */
+  display: flex;
+  align-items: center;
+}
+
+/* Keep links compact so navbar stays slim */
+.navbar-tile .nav-link {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+/* Reduce brand font size for consistent height */
+.navbar-tile .navbar-brand {
+  font-size: 1.35rem;
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 1;
+}
+
+/* Account icon alignment */
+.navbar-tile .dropdown-toggle {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.navbar-brand,
+.nav-link {
+  color: #fff !important;
+  font-family: var(--font-sans);
+  letter-spacing: 1px;
+}
+
+.navbar-brand {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+}
+
+.nav-link.active,
+.nav-link:hover {
+  color: var(--color-primary-light) !important;
 }
 
 /* Table */
@@ -84,4 +164,68 @@ th, td {
   padding: 20px;
   margin: 50px auto 0px auto;
   width: 77%;
+}
+
+/* Hero section */
+.hero__title {
+  font-family: var(--font-display);
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--color-text);
+}
+
+.hero__tagline {
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  color: var(--color-text);
+}
+
+/* Primary button overrides */
+.btn-primary {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--color-primary-dark) !important;
+  border-color: var(--color-primary-dark) !important;
+}
+
+/* Nav pill styling */
+.nav-pills .nav-link {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--color-primary) !important;
+  color: #fff !important;
+}
+
+/* Card background */
+.card {
+  background-color: var(--color-surface);
+}
+
+/* Form control focus */
+.form-control:focus {
+  border-color: var(--color-primary-light);
+  box-shadow: 0 0 0 0.2rem rgba(79, 135, 69, 0.25);
+}
+
+/* Form labels */
+.form-label {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+/* Remember me checkbox label */
+.form-check-label {
+  color: var(--color-text);
+}
+
+/* Primary text utility override */
+.text-primary, .link-primary {
+  color: var(--color-primary) !important;
 }
