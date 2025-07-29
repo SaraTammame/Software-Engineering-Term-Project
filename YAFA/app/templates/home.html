@@ -5,8 +5,117 @@
 {% endblock %}
 
 {% block header %}
-    <h1>Welcome to Yet Another Fitness App!</h1>
+    <section class="hero container py-5">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="hero__title mb-4">Your Fitness Journey<br>Starts Here</h1>
+                <p class="hero__tagline mb-4">Log workouts, monitor progress, and stay motivated—all in one place.</p>
+                <a class="btn btn-primary btn-lg" href="{{ url_for('user.auth') }}">Get Started</a>
+            </div>
+            <div class="col-md-6 text-center">
+                <img src="https://via.placeholder.com/600x400?text=Fitness+Image" class="img-fluid" alt="Fitness illustration">
+            </div>
+        </div>
+    </section>
 {% endblock %}
+
 {% block body %}
-    <p>This is the home page of the YAFA application. <em>Eventually to be locked behind login screen.</em></p>
+    <!-- Features Section -->
+    <section class="container py-5">
+        <h2 class="text-center mb-5">Why Choose YAFA?</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="h5 mb-3">Track Your Progress</h3>
+                        <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="h5 mb-3">Journal Your Journey</h3>
+                        <p class="text-muted">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="h5 mb-3">Stay Motivated</h3>
+                        <p class="text-muted">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-5" style="background-color: var(--color-surface)">
+        <div class="container">
+            <h2 class="text-center mb-5">How It Works</h2>
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <img src="https://via.placeholder.com/600x400?text=App+Screenshot" class="img-fluid rounded shadow" alt="App screenshot">
+                </div>
+                <div class="col-md-6">
+                    <div class="ps-md-5">
+                        <h3 class="mb-4">Simple. Effective. Yours.</h3>
+                        <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                        <ul class="list-unstyled">
+                            <li class="mb-3">✓ Easy workout logging</li>
+                            <li class="mb-3">✓ Progress tracking</li>
+                            <li class="mb-3">✓ Journal entries</li>
+                            <li class="mb-3">✓ Goal setting</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="container py-5">
+        <h2 class="text-center mb-5">What Our Users Say</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <p class="mb-3">"Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error."</p>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">JD</div>
+                            <div class="ms-3">
+                                <h5 class="mb-0">Jane Doe</h5>
+                                <small class="text-muted">Fitness Enthusiast</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <p class="mb-3">"Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem."</p>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">JS</div>
+                            <div class="ms-3">
+                                <h5 class="mb-0">John Smith</h5>
+                                <small class="text-muted">Personal Trainer</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-5" style="background-color: var(--color-primary)">
+        <div class="container text-center py-4">
+            <h2 class="text-white mb-4">Ready to Start Your Fitness Journey?</h2>
+            <p class="text-white-50 mb-4">Join thousands of users who are already tracking their progress with YAFA.</p>
+            <a href="{{ url_for('user.auth') }}" class="btn btn-light btn-lg px-4">Sign Up Now</a>
+        </div>
+    </section>
 {% endblock %}
