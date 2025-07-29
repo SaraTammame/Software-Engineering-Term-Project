@@ -28,8 +28,8 @@ def create_app():
 
     user_routes.register_blueprints(app)
 
-    from app.notifications.notifications import init_notifications
+    # from app.notifications.notifications import init_notifications
 
-    init_notifications(app)
+    # init_notifications(app)
 
     return app
