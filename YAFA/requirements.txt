@@ -5,3 +5,9 @@ psycopg2-binary
 python-dotenv
 flask-migrate
 Flask-APScheduler
+
+# Testing dependencies
+pytest
+pytest-flask
+pytest-cov
+factory-boy

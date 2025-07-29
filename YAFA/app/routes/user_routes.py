@@ -3,8 +3,8 @@ from app import db
 from app.model.user import User
 from app.model.workout import Workout
 from app.model.journal import Journal
-from app.model.test_model import test_insert
-from app.model.workout_add import add_workout
+from app.model.model_example import test_insert
+from app.model.workout import add_workout
 
 # Create a Blueprint named 'user'
 user_bp = Blueprint("user", __name__)
@@ -52,10 +52,13 @@ def journal():
                 db.session.add(new_entry)
                 db.session.commit()
                 return redirect(url_for("user.journal"))
-    return render_template("journal.html", user_query_result=users, journal_query_result=entry)
+    return render_template(
+        "journal.html", user_query_result=users, journal_query_result=entry
+    )
+
 
 def add_journal_entry():
-    
+
     return render_template("journal.html")
 
 
