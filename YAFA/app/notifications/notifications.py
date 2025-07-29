@@ -32,6 +32,58 @@ def schedule_notifications(user_id: int) -> None:
             )
 
 
+def send_water_reminder(user_id: int) -> None:
+    user = User.query.get(user_id)
+    if user:
+        send_notification(
+            title="Hydration Reminder",
+            message=f"Hi {user.username}, remember to drink water and stay hydrated!"
+        )
+
+
+def send_steps_reminder(user_id: int) -> None:
+    user = User.query.get(user_id)
+    if user:
+        send_notification(
+            title="Steps Reminder",
+            message=f"Hi {user.username}, make sure to get enough steps in today!"
+        )
+
+
+def send_nutrients_reminder(user_id: int) -> None:
+    user = User.query.get(user_id)
+    if user:
+        send_notification(
+            title="Nutrition Reminder",
+            message=f"Hi {user.username}, don't forget to eat a balanced diet with enough nutrients!"
+        )
+
+
+def schedule_daily_reminders(user_id: int) -> None:
+    # Schedule daily reminders for water, steps, and nutrients
+    scheduler.add_job(
+        id=f"water-reminder-{user_id}",
+        func=send_water_reminder,
+        args=[user_id],
+        trigger='cron',
+        hour=9  # Example: 9 AM daily
+    )
+    scheduler.add_job(
+        id=f"steps-reminder-{user_id}",
+        func=send_steps_reminder,
+        args=[user_id],
+        trigger='cron',
+        hour=12  # Example: 12 PM daily
+    )
+    scheduler.add_job(
+        id=f"nutrients-reminder-{user_id}",
+        func=send_nutrients_reminder,
+        args=[user_id],
+        trigger='cron',
+        hour=18  # Example: 6 PM daily
+    )
+
+
 def init_notifications(app: Flask) -> None:
     # enable scheduler api
     app.config.setdefault('SCHEDULER_API_ENABLED', True)
@@ -40,6 +92,7 @@ def init_notifications(app: Flask) -> None:
     scheduler.init_app(app)
     for user in User.query.all():
         schedule_notifications(user.id)
+        schedule_daily_reminders(user.id)
     scheduler.start()
 
 
