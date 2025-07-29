@@ -1,57 +1,81 @@
 {% extends "base.html" %}
 
-{% block title %}Add Journal Entry{% endblock %}
+{% block title %}Journal{% endblock %}
 
 {% block header %}
-    <h1>Add New Journal Entry</h1>
+<section class="container py-5 text-center">
+    <h1 class="hero__title mb-3">Journal</h1>
+    <p class="hero__tagline">Reflect on your workouts and log how you feel each day.</p>
+</section>
 {% endblock %}
 
 {% block body %}
-    <form method="POST" action="/journal">
-        {% if user_id %}
-            <input type="hidden" name="user_id" value="{{ user_id }}">
-        {% endif %}
-        <div>
-            <label for="user_id">User ID</label>
-            <input type="number" id="user_id" name="user_id" required>
+<div class="container py-5">
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-4">Add New Entry</h2>
+                    <form method="POST" action="/journal">
+                        {% if user_id %}
+                            <input type="hidden" name="user_id" value="{{ user_id }}">
+                        {% endif %}
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="user_id" class="form-label">User ID</label>
+                                <input type="number" id="user_id" name="user_id" class="form-control" required>
+                            </div>
+                            <div class="col-md-8">
+                                <label for="title" class="form-label">Title</label>
+                                <input type="text" id="title" name="entry_title" class="form-control" placeholder="Workout reflection" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="log" class="form-label">Log</label>
+                                <textarea id="log" name="entry_content" rows="4" class="form-control" placeholder="How did today feel?" required></textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="date" class="form-label">Date</label>
+                                <input type="date" id="date" name="entry_date" class="form-control" required>
+                            </div>
+                            <div class="col-12 d-grid">
+                                <button type="submit" class="btn btn-primary">Add Entry</button>
+                            </div>
+                        </div>
+                    </form>
+                    {% if error_message %}
+                        <div class="alert alert-danger mt-3" role="alert">{{ error_message }}</div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        <div>
-            <label for="title">Title</label>
-            <input type="text" id="title" name="entry_title" required>
-        </div>
-        <div>
-            <label for="log">Log</label>
-            <textarea id="log" name="entry_content" required></textarea>
-        </div>
-        <div>
-            <label for="date">Date</label>
-            <input type="date" id="date" name="entry_date" required>
-        </div>
-        <button type="submit">Add Entry</button>
-    </form>
-    {% if error_message %}
-    <div style="color: red;">{{ error_message }}</div>
-    {% endif %}
+    </div>
 
-    <h2>All Journal Entries</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>User ID</th>
-                <th>Title</th>
-                <th>Date</th>
-                <th id="journal_log">Log</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for entry in journal_query_result %}
-            <tr>
-                <td>{{ entry.user_id }}</td>
-                <td>{{ entry.entry_title }}</td>
-                <td>{{ entry.entry_date }}</td>
-                <td id ="journal_log">{{ entry.entry_content }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <h2 class="h5 mb-3">All Journal Entries</h2>
+            <div class="table-responsive shadow-sm">
+                <table class="table table-striped align-middle mb-0">
+                    <thead style="background-color: var(--color-primary-light);">
+                        <tr class="text-white">
+                            <th scope="col">User ID</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Log</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in journal_query_result %}
+                        <tr>
+                            <td>{{ entry.user_id }}</td>
+                            <td>{{ entry.entry_title }}</td>
+                            <td>{{ entry.entry_date }}</td>
+                            <td>{{ entry.entry_content }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
