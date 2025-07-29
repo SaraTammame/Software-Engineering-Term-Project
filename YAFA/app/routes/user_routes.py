@@ -114,6 +114,14 @@ def add_workout_page():
     )
 
 
+@user_bp.route("/progress", methods=["GET"])
+def progress():
+    workouts = Workout.query.order_by(Workout.workout_date).all()
+    dates = [w.workout_date.strftime("%Y-%m-%d") for w in workouts]
+    durations = [w.workout_duration for w in workouts]
+    return render_template("progress.html", dates=dates, durations=durations)
+
+
 # register the blueprint
 def register_blueprints(app):
     app.register_blueprint(user_bp)

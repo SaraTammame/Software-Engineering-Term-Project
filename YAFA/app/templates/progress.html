@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Progress{% endblock %}
+
+{% block header %}
+<section class="container py-5 text-center">
+    <h1 class="hero__title mb-3">Progress</h1>
+    <p class="hero__tagline">Visualize your workout journey over time.</p>
+</section>
+{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-4">Workout Durations Over Time</h2>
+                    <div style="height:400px;">
+                        <canvas id="durationChart" class="w-100 h-100"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    const ctx = document.getElementById('durationChart');
+    const durationChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ dates|tojson }},
+            datasets: [{
+                label: 'Duration (min)',
+                data: {{ durations|tojson }},
+                fill: false,
+                borderColor: getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim() || '#4a7245',
+                backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--color-primary-light').trim() || '#8fbc8f',
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim() },
+                    grid: { display: false }
+                },
+                y: {
+                    title: { display: true, text: 'Minutes' },
+                    ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim() },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+</script>
+{% endblock %} 

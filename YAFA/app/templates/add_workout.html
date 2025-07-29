@@ -1,127 +1,104 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <!-- Bootstrap "Download" -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+{% block title %}Workouts{% endblock %}
 
-<body>
+{% block header %}
+<section class="container py-5 text-center">
+    <h1 class="hero__title mb-3">Workouts</h1>
+    <p class="hero__tagline">Log each workout and keep track of your training history.</p>
+</section>
+{% endblock %}
 
-<nav class="navbar navbar-expand-lg bg-light">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">YAFA</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="./">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Users</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Login</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
-<div class="container-fluid py-5" style="background-color: #89CFF0;">
-  <div class="row align-items-center justify-content-center">
-    <div class="col-md-8">
-      <h1 class="display-4 fw-bold text-white mb-4">All Workouts</h1>
-
-      <div class="card bg-white shadow mt-4">
-        <div class="card-body">
-          <h2>Add New Workout</h2>
-          <form method="POST">
-            <div class="mb-3">
-              <label for="workout_id" class="form-label">Workout ID</label>
-              <input type="number" class="form-control" id="workout_id" name="workout_id">
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-9">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-4">Add New Workout</h2>
+                    <form method="POST">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="workout_id" class="form-label">Workout ID</label>
+                                <input type="number" class="form-control" id="workout_id" name="workout_id">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="user_id" class="form-label">User ID</label>
+                                <input type="number" class="form-control" id="user_id" name="user_id" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="workout_date" class="form-label">Date</label>
+                                <input type="date" class="form-control" id="workout_date" name="workout_date" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="workout_type" class="form-label">Type</label>
+                                <input type="text" class="form-control" id="workout_type" name="workout_type" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="workout_duration" class="form-label">Duration (min)</label>
+                                <input type="number" class="form-control" id="workout_duration" name="workout_duration" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="workout_distance" class="form-label">Distance (km)</label>
+                                <input type="number" step="0.1" class="form-control" id="workout_distance" name="workout_distance" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="workout_calories" class="form-label">Calories</label>
+                                <input type="number" class="form-control" id="workout_calories" name="workout_calories" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="workout_notes" class="form-label">Notes</label>
+                                <textarea class="form-control" id="workout_notes" name="workout_notes" rows="3"></textarea>
+                            </div>
+                            <div class="col-12 d-grid">
+                                <button type="submit" class="btn btn-primary">Add Workout</button>
+                            </div>
+                        </div>
+                    </form>
+                    {% if error_message %}
+                        <div class="alert alert-danger mt-3" role="alert">{{ error_message }}</div>
+                    {% endif %}
+                </div>
             </div>
-            <div class="mb-3">
-              <label for="user_id" class="form-label">User ID</label>
-              <input type="number" class="form-control" id="user_id" name="user_id" required>
-            </div>
-            <div class="mb-3">
-              <label for="workout_date" class="form-label">Workout Date</label>
-              <input type="date" class="form-control" id="workout_date" name="workout_date" required>
-            </div>
-            <div class="mb-3">
-              <label for="workout_type" class="form-label">Workout Type</label>
-              <input type="text" class="form-control" id="workout_type" name="workout_type" required>
-            </div>
-            <div class="mb-3">
-              <label for="workout_duration" class="form-label">Duration (minutes)</label>
-              <input type="number" class="form-control" id="workout_duration" name="workout_duration" required>
-            </div>
-            <div class="mb-3">
-              <label for="workout_distance" class="form-label">Distance (km)</label>
-              <input type="number" step="0.1" class="form-control" id="workout_distance" name="workout_distance" required>
-            </div>
-            <div class="mb-3">
-              <label for="workout_calories" class="form-label">Calories</label>
-              <input type="number" class="form-control" id="workout_calories" name="workout_calories" required>
-            </div>
-            <div class="mb-3">
-              <label for="workout_notes" class="form-label">Notes</label>
-              <textarea class="form-control" id="workout_notes" name="workout_notes"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Add Workout</button>
-          </form>
-          {% if error_message %}
-          <div class="alert alert-danger mt-3">{{ error_message }}</div>
-          {% endif %}
         </div>
-      </div>
-
-      <div class="card bg-white shadow">
-        <div class="card-body">
-          <table class="table table-bordered table-hover">
-            <thead class="table-dark">
-              <tr>
-                <th>#</th>
-                <th>Workout ID</th>
-                <th>User ID</th>
-                <th>Workout Date</th>
-                <th>Workout Type</th>
-                <th>Workout Duration</th>
-                <th>Workout Distance</th>
-                <th>Workout Calories</th>
-                <th>Workout Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for workout in workout_query_result %}
-              <tr>
-                <td>{{ loop.index }}</td>
-                <td>{{ workout.id }}</td>
-                <td>{{ workout.user_id }}</td>
-                <td>{{ workout.workout_date }}</td>
-                <td>{{ workout.workout_type }}</td>
-                <td>{{ workout.workout_duration }}</td>
-                <td>{{ workout.workout_distance }}</td>
-                <td>{{ workout.workout_calories }}</td>
-                <td>{{ workout.workout_notes }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
-  </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+            <h2 class="h5 mb-3">All Workouts</h2>
+            <div class="table-responsive shadow-sm">
+                <table class="table table-striped align-middle mb-0">
+                    <thead style="background-color: var(--color-primary-light);" class="text-white">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Workout ID</th>
+                            <th scope="col">User ID</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Duration (min)</th>
+                            <th scope="col">Distance (km)</th>
+                            <th scope="col">Calories</th>
+                            <th scope="col">Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for workout in workout_query_result %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ workout.id }}</td>
+                            <td>{{ workout.user_id }}</td>
+                            <td>{{ workout.workout_date }}</td>
+                            <td>{{ workout.workout_type }}</td>
+                            <td>{{ workout.workout_duration }}</td>
+                            <td>{{ workout.workout_distance }}</td>
+                            <td>{{ workout.workout_calories }}</td>
+                            <td>{{ workout.workout_notes }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-
-</html>
+{% endblock %}
