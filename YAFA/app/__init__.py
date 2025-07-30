@@ -26,6 +26,11 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
+    # --- Import models so they are registered with SQLAlchemy metadata ---
+    # NOTE: Importing *after* init_app prevents circular-import issues.
+    with app.app_context():
+        from app.model import user, workout, workout_name, journal  # noqa: F401
+
     # register the blueprints
     from app.routes import user_routes
 

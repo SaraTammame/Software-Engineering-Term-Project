@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Workout {{ workout.workout_id }}{% endblock %}
+{% block title %}Workout {{ workout.id }}{% endblock %}
 
 {% block header %}
 <section class="container py-5 text-center">
@@ -17,7 +17,7 @@
                 <div class="card-body p-4">
                     <h2 class="h5 mb-4">Workout Details</h2>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between"><span>ID</span><strong>{{ workout.workout_id }}</strong></li>
+                        <li class="list-group-item d-flex justify-content-between"><span>ID</span><strong>{{ workout.id }}</strong></li>
                         <li class="list-group-item d-flex justify-content-between"><span>User ID</span><strong>{{ workout.user_id }}</strong></li>
                         <li class="list-group-item d-flex justify-content-between"><span>Date</span><strong>{{ workout.workout_date }}</strong></li>
                         <li class="list-group-item d-flex justify-content-between"><span>Type</span><strong>{{ workout.workout_type }}</strong></li>

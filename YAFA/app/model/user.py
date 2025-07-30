@@ -8,6 +8,11 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
 
+    # Link to any workout names this user has created themselves
+    custom_workout_names = db.relationship(
+        "WorkoutName", back_populates="user", cascade="all, delete-orphan"
+    )
+
     def __repr__(self):
         return f"<User {self.username}>"
 
@@ -20,6 +25,7 @@ class User(db.Model):
 
 
 def insert_user_data(id, username, password):
+    """Utility used by tests/sample scripts to insert users quickly."""
 
     # Accept only signed 32-bit integer primary keys for now.
     MAX_INT32 = 2**31 - 1

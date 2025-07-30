@@ -35,7 +35,7 @@
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountMenu">
                                 <li><a class="dropdown-item" href="/settings">Settings</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('user.logout') }}">Logout</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -63,7 +63,7 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountMenuMobile">
                         <li><a class="dropdown-item" href="/settings">Settings</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('user.logout') }}">Logout</a></li>
                     </ul>
                 </div>
             </div>
