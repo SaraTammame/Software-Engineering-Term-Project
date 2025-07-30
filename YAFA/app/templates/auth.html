@@ -16,61 +16,12 @@
             <div class="card shadow-sm border-0">
                 <div class="card-body p-4">
                     <!-- Nav tabs -->
-                    <ul class="nav nav-pills nav-fill mb-4" id="authTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="login-tab" data-bs-toggle="pill" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="true">Login</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="register-tab" data-bs-toggle="pill" data-bs-target="#register" type="button" role="tab" aria-controls="register" aria-selected="false">Register</button>
-                        </li>
-                    </ul>
-
+                    {% block tabs %}{% endblock %}
+                    
                     <!-- Tab panes -->
                     <div class="tab-content">
-                        <!-- Login Form -->
-                        <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
-                            <form method="POST" action="#">
-                                <div class="mb-3 text-start">
-                                    <label for="loginEmail" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="loginEmail" name="email" placeholder="john@example.com" required>
-                                </div>
-                                <div class="mb-3 text-start">
-                                    <label for="loginPassword" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="loginPassword" name="password" required>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="rememberMe">
-                                        <label class="form-check-label" for="rememberMe">Remember me</label>
-                                    </div>
-                                    <a href="#" class="small text-decoration-none">Forgot password?</a>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100">Login</button>
-                            </form>
-                        </div>
-
-                        <!-- Register Form -->
-                        <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
-                            <form method="POST" action="#">
-                                <div class="mb-3 text-start">
-                                    <label for="registerName" class="form-label">Full Name</label>
-                                    <input type="text" class="form-control" id="registerName" name="name" placeholder="John Doe" required>
-                                </div>
-                                <div class="mb-3 text-start">
-                                    <label for="registerEmail" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="registerEmail" name="email" placeholder="john@example.com" required>
-                                </div>
-                                <div class="mb-3 text-start">
-                                    <label for="registerPassword" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="registerPassword" name="password" required>
-                                </div>
-                                <div class="mb-3 text-start">
-                                    <label for="registerConfirm" class="form-label">Confirm Password</label>
-                                    <input type="password" class="form-control" id="registerConfirm" name="confirm_password" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100">Create Account</button>
-                            </form>
-                        </div>
+                        <!-- Login/Register Form -->
+                        {% block content %}{% endblock %}
                     </div>
 
                 </div>
