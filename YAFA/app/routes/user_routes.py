@@ -31,31 +31,37 @@ def insert_sample_rows():
     return render_template("insert.html")
 
 
-@user_bp.route("/auth", methods=["GET", "POST"])
+@user_bp.route("/auth", methods=["GET"])
 def auth():
-    error_message = None
-    if request.method == "POST":
-        username = request.form.get("username", "").strip()
-        password = request.form.get("password", "").strip()
-        user = User.query.filter_by(username=username).first()
-        if user is None:
-            error_message = "Invalid username."
-        elif user.password != password:
-            error_message = "Invalid password."
-        else:
-            # Successful login: you can set session/cookies here if needed
-            return redirect(url_for("user.home"))
-    return render_template("login.html", error_message=error_message)
+    # Redirect to the dedicated authentication page
+    return redirect(url_for("auth.login"))
 
 
 @user_bp.route("/journal", methods=["POST", "GET"])
 def journal():
     current_uid = session.get("current_uid")
     if current_uid is None:
-        return redirect(url_for("user.login", next=request.path))
+        return redirect(url_for("auth.login", next=request.path))
 
     users = User.query.all()
-    entry = Journal.query.filter_by(user_id=current_uid).all()
+
+    # Sorting controls (default newest first)
+    sort = request.args.get("sort", "date_desc")
+    base_query = Journal.query.filter_by(user_id=current_uid)
+    if sort == "date_asc":
+        entry = base_query.order_by(Journal.entry_date.asc()).all()
+    elif sort == "title":
+        entry = base_query.order_by(Journal.entry_title.asc()).all()
+    else:  # date_desc
+        entry = base_query.order_by(Journal.entry_date.desc()).all()
+
+    # Workouts for dropdown (owned by user)
+    workouts_for_user = (
+        Workout.query.filter_by(user_id=current_uid)
+        .order_by(Workout.workout_date.desc())
+        .all()
+    )
+
     error_message = None
 
     if request.method == "POST":
@@ -63,6 +69,7 @@ def journal():
             entry_date = request.form["entry_date"]
             entry_title = request.form["entry_title"]
             entry_content = request.form["entry_content"]
+            selected_ids = request.form.getlist("workout_ids[]")  # may be empty list
         except KeyError:
             error_message = "Missing form fields."
         else:
@@ -72,6 +79,15 @@ def journal():
                 entry_title=entry_title,
                 entry_content=entry_content,
             )
+            # Attach workouts
+            for wid in selected_ids:
+                if wid.isdigit():
+                    workout_obj = Workout.query.filter_by(
+                        id=int(wid), user_id=current_uid
+                    ).first()
+                    if workout_obj:
+                        new_entry.workouts.append(workout_obj)
+
             db.session.add(new_entry)
             db.session.commit()
             return redirect(url_for("user.journal"))
@@ -82,14 +98,27 @@ def journal():
         journal_query_result=entry,
         current_uid=current_uid,
         error_message=error_message,
+        workouts_for_user=workouts_for_user,
+        sort=sort,
     )
+
+
+@user_bp.route("/journal/<int:entry_id>")
+def journal_detail(entry_id):
+    """Detailed page for a single journal entry"""
+    current_uid = session.get("current_uid")
+    if current_uid is None:
+        return redirect(url_for("auth.login", next=request.path))
+
+    entry = Journal.query.filter_by(id=entry_id, user_id=current_uid).first_or_404()
+    return render_template("journal_detail.html", entry=entry)
 
 
 @user_bp.route("/add_workout", methods=["GET", "POST"])
 def add_workout_page():
     current_uid = session.get("current_uid")
     if current_uid is None:
-        return redirect(url_for("user.login", next=request.path))
+        return redirect(url_for("auth.login", next=request.path))
 
     error_message = None
 
@@ -152,7 +181,7 @@ def add_workout_page():
 def progress():
     current_uid = session.get("current_uid")
     if current_uid is None:
-        return redirect(url_for("user.login", next=request.path))
+        return redirect(url_for("auth.login", next=request.path))
 
     workouts = (
         Workout.query.filter_by(user_id=current_uid)
@@ -168,7 +197,7 @@ def progress():
 def workout_detail(workout_id):
     current_uid = session.get("current_uid")
     if current_uid is None:
-        return redirect(url_for("user.login", next=request.path))
+        return redirect(url_for("auth.login", next=request.path))
 
     workout = Workout.query.filter_by(id=workout_id, user_id=current_uid).first_or_404()
     return render_template("workout_detail.html", workout=workout)

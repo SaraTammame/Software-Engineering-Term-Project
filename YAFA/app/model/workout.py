@@ -1,5 +1,6 @@
 from app import db
 from datetime import datetime, date
+from app.model.journal import journal_workout_association  # import association table
 
 
 class Workout(db.Model):
@@ -22,6 +23,13 @@ class Workout(db.Model):
     workout_calories = db.Column(db.Integer, nullable=False)
     workout_notes = db.Column(db.String(255), nullable=True)
 
+    # Back-reference to journal entries
+    journals = db.relationship(
+        "Journal",
+        secondary=journal_workout_association,
+        back_populates="workouts",
+    )
+
     def __repr__(self):
         return f"<Workout {self.id}>"
 
@@ -37,6 +45,9 @@ class Workout(db.Model):
             "workout_calories": self.workout_calories,
             "workout_notes": self.workout_notes,
         }
+
+
+# existing helper functions unchanged...
 
 
 def _coerce_date(value):

@@ -1,56 +1,28 @@
 {% extends "auth.html" %}
 
-{% block title %}
-    Register
-{% endblock %}
+{% block title %}Register{% endblock %}
 
-{% block nav %}{% endblock %}
-
-{% block tabs %}
-    <ul class="nav nav-pills nav-fill mb-4" id="authTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <a class="nav-link {% if request.endpoint == 'auth.login' %}active{% endif %}"
-                id="login-tab"
-                href="{{ url_for('auth.login') }}"
-                role="tab"
-                aria-controls="login"
-                aria-selected="{{ 'true' if request.endpoint == 'auth.login' else 'false' }}">
-                Login
-            </a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link {% if request.endpoint == 'auth.register' %}active{% endif %}"
-                id="register-tab"
-                href="{{ url_for('auth.register') }}"
-                role="tab"
-                aria-controls="register"
-                aria-selected="{{ 'true' if request.endpoint == 'auth.register' else 'false' }}">
-                Register
-            </a>
-        </li>
-    </ul>
-{% endblock %}
 {% block content %}
-<!-- Register Form -->
-<div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
-    <form method="POST" action="#">
-        <div class="mb-3 text-start">
-            <label for="registerName" class="form-label">Full Name</label>
-            <input type="text" class="form-control" id="registerName" name="name" placeholder="John Doe" required>
-        </div>
-        <div class="mb-3 text-start">
-            <label for="registerEmail" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="registerEmail" name="email" placeholder="john@example.com" required>
-        </div>
-        <div class="mb-3 text-start">
-            <label for="registerPassword" class="form-label">Password</label>
-            <input type="password" class="form-control" id="registerPassword" name="password" required>
-        </div>
-        <div class="mb-3 text-start">
-            <label for="registerConfirm" class="form-label">Confirm Password</label>
-            <input type="password" class="form-control" id="registerConfirm" name="confirm_password" required>
-        </div>
-            <button type="submit" class="btn btn-primary w-100">Create Account</button>
-            </form>
-        </div>
+<form method="POST" action="#">
+    <div class="mb-3 text-start">
+        <label for="registerName" class="form-label">Full Name</label>
+        <input type="text" class="form-control" id="registerName" name="name" placeholder="username" required>
+    </div>
+    <div class="mb-3 text-start">
+        <label for="registerEmail" class="form-label">Email address</label>
+        <input type="email" class="form-control" id="registerEmail" name="email" placeholder="example@example.com" required>
+    </div>
+    <div class="mb-3 text-start">
+        <label for="registerPassword" class="form-label">Password</label>
+        <input type="password" class="form-control" id="registerPassword" name="password" required>
+    </div>
+    <div class="mb-3 text-start">
+        <label for="registerConfirm" class="form-label">Confirm Password</label>
+        <input type="password" class="form-control" id="registerConfirm" name="confirm_password" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Create Account</button>
+</form>
+<div class="text-center mt-3">
+    <a href="{{ url_for('auth.login') }}" class="small text-decoration-none link-secondary">Already have an account?</a>
+</div>
 {% endblock %}

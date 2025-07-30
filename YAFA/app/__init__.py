@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
 import secrets
+
 # right now this will throw an error when ran
 # from app.notifications.notifications import init_notifications
 
@@ -17,7 +18,7 @@ def create_app():
 
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
-    app.config['SECRET_KEY'] = 'your-very-secret-key'
+    app.config["SECRET_KEY"] = "your-very-secret-key"
 
     # Configure your database URI
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
@@ -32,11 +33,13 @@ def create_app():
     # --- Import models so they are registered with SQLAlchemy metadata ---
     # NOTE: Importing *after* init_app prevents circular-import issues.
     with app.app_context():
-        from app.model import user, workout, workout_name, journal  # noqa: F401
+        # Import order matters to avoid circular dependencies
+        from app.model import user, journal, workout, workout_name  # noqa: F401
 
     # register the blueprints
     from app.routes import user_routes
     from app.routes import auth
+
     user_routes.register_blueprints(app)
     app.register_blueprint(auth.bp)
 
