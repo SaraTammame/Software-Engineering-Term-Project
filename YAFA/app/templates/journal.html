@@ -39,6 +39,16 @@
                                 <label for="date" class="form-label">Date</label>
                                 <input type="date" id="date" name="entry_date" class="form-control" required>
                             </div>
+                            <!-- New field: link workouts -->
+                            <div class="col-md-8">
+                                <label for="workoutSelect" class="form-label">Link Workout(s)</label>
+                                <select id="workoutSelect" name="workout_ids[]" class="form-select" multiple>
+                                    {% for w in workouts_for_user %}
+                                        <option value="{{ w.id }}">{{ w.workout_date }} — {{ w.workout_type }}</option>
+                                    {% endfor %}
+                                </select>
+                                <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple workouts</small>
+                            </div>
                             <div class="col-12 d-grid">
                                 <button type="submit" class="btn btn-primary">Add Entry</button>
                             </div>
@@ -48,21 +58,62 @@
                         <div class="alert alert-danger mt-3" role="alert">{{ error_message }}</div>
                     {% endif %}
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <h2 class="h5 mb-3">All Journal Entries</h2>
-            <div class="table-responsive shadow-sm">
-                <table class="table table-striped align-middle mb-0">
+    <!-- Sorting dropdown -->
+    <div class="row mb-2 justify-content-end">
+        <div class="col-auto">
+            <form method="GET" action="/journal">
+                <label class="me-2" for="sortBy">Sort by:</label>
+                <select name="sort" id="sortBy" onchange="this.form.submit()" class="form-select d-inline-block w-auto">
+                    <option value="date_desc" {% if sort=='date_desc' %}selected{% endif %}>Date (Newest)</option>
+                    <option value="date_asc" {% if sort=='date_asc' %}selected{% endif %}>Date (Oldest)</option>
+                    <option value="title" {% if sort=='title' %}selected{% endif %}>Title</option>
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <!-- Journal Entries Grid -->
+    <h2 class="h5 mb-3">All Journal Entries</h2>
+    <div class="row g-4">
+        {% for entry in journal_query_result %}
+        <div class="col-12 col-sm-6 col-lg-4">
+            <a href="{{ url_for('user.journal_detail', entry_id=entry.id) }}" class="journal-card card border-0 h-100 text-reset text-decoration-none" data-index="{{ loop.index0 }}">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h5 class="card-title mb-1">{{ entry.entry_title }}</h5>
+                            <small class="opacity-75">{{ entry.entry_date }}</small>
+                        </div>
+                        <span class="badge bg-white text-dark fw-normal">{{ loop.index }}</span>
+                    </div>
+                                        {% if entry.workouts %}
+                    <hr class="border-primary-subtle opacity-75 my-2">
+                    <ul class="list-unstyled small mb-0">
+                        {% for w in entry.workouts %}
+                        <li><a class="link-primary text-decoration-underline" href="{{ url_for('user.workout_detail', workout_id=w.id) }}">{{ w.workout_date }} — {{ w.workout_type }}</a></li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- removed old table -->
+
+
+                <!--
                     <thead style="background-color: var(--color-primary-light);">
                         <tr class="text-white">
                             <th scope="col">User ID</th>
                             <th scope="col">Title</th>
                             <th scope="col">Date</th>
                             <th scope="col">Log</th>
+                            <th scope="col">Workouts</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -72,10 +123,19 @@
                             <td>{{ entry.entry_title }}</td>
                             <td>{{ entry.entry_date }}</td>
                             <td>{{ entry.entry_content }}</td>
+                            <td>
+                                {% if entry.workouts %}
+                                    <ul class="mb-0 ps-3">
+                                        {% for w in entry.workouts %}
+                                            <li><a href="{{ url_for('user.workout_detail', workout_id=w.id) }}">{{ w.workout_date }} — {{ w.workout_type }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}-{% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
-                </table>
+                </table> -->
             </div>
         </div>
     </div>
