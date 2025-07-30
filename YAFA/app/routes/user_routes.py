@@ -18,35 +18,6 @@ user_bp = Blueprint("user", __name__)
 
 
 # ---------------------------
-# Authentication placeholder
-# ---------------------------
-@user_bp.route("/login", methods=["GET", "POST"])
-def login():
-    """Very simple login that stores a numeric user_id in the session."""
-    error_message = None
-    if request.method == "POST":
-        try:
-            user_id = int(request.form["user_id"])
-        except (KeyError, ValueError):
-            error_message = "Please enter a valid numeric User ID."
-        else:
-            if not User.query.get(user_id):
-                error_message = f"User with ID {user_id} does not exist."
-            else:
-                session["current_uid"] = user_id
-                # Redirect to original destination if provided
-                next_url = request.args.get("next")
-                return redirect(next_url or url_for("user.home"))
-    return render_template("login.html", error_message=error_message)
-
-
-@user_bp.route("/logout")
-def logout():
-    session.pop("current_uid", None)
-    return redirect(url_for("user.login"))
-
-
-# ---------------------------
 # Pages
 # ---------------------------
 @user_bp.route("/")
@@ -54,7 +25,30 @@ def home():
     return render_template("home.html")
 
 
-@user_bp.route("/journal", methods=["GET", "POST"])
+@user_bp.route("/insert", methods=["POST"])
+def insert_sample_rows():
+    test_insert()
+    return render_template("insert.html")
+
+
+@user_bp.route("/auth", methods=["GET", "POST"])
+def auth():
+    error_message = None
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            error_message = "Invalid username."
+        elif user.password != password:
+            error_message = "Invalid password."
+        else:
+            # Successful login: you can set session/cookies here if needed
+            return redirect(url_for("user.home"))
+    return render_template("login.html", error_message=error_message)
+
+
+@user_bp.route("/journal", methods=["POST", "GET"])
 def journal():
     current_uid = session.get("current_uid")
     if current_uid is None:

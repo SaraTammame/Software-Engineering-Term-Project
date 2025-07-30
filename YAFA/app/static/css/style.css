@@ -91,7 +91,7 @@ th, td {
     color: #4d774e;           /* Your desired green */
     font-weight: bold;
     background: none !important;
-    opacity: 1;             /* Faded effect for inactive */
+    opacity: 0.5;             /* Faded effect for inactive */
     transition: color 0.2s, opacity 0.2s;
 }
 
