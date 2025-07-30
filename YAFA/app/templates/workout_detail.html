@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Workout {{ workout.workout_id }}{% endblock %}
+
+{% block header %}
+<section class="container py-5 text-center">
+    <h1 class="hero__title mb-3">{{ workout.workout_type }}</h1>
+    <p class="hero__tagline">{{ workout.workout_date }}</p>
+</section>
+{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h2 class="h5 mb-4">Workout Details</h2>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between"><span>ID</span><strong>{{ workout.workout_id }}</strong></li>
+                        <li class="list-group-item d-flex justify-content-between"><span>User ID</span><strong>{{ workout.user_id }}</strong></li>
+                        <li class="list-group-item d-flex justify-content-between"><span>Date</span><strong>{{ workout.workout_date }}</strong></li>
+                        <li class="list-group-item d-flex justify-content-between"><span>Type</span><strong>{{ workout.workout_type }}</strong></li>
+                        <li class="list-group-item d-flex justify-content-between"><span>Duration (min)</span><strong>{{ workout.workout_duration }}</strong></li>
+                        <li class="list-group-item d-flex justify-content-between"><span>Distance (km)</span><strong>{{ workout.workout_distance }}</strong></li>
+                        <li class="list-group-item d-flex justify-content-between"><span>Calories</span><strong>{{ workout.workout_calories }}</strong></li>
+                        {% if workout.workout_notes %}
+                        <li class="list-group-item"><span class="fw-bold">Notes:</span><br>{{ workout.workout_notes }}</li>
+                        {% endif %}
+                    </ul>
+                    <a href="{{ url_for('user.add_workout_page') }}" class="btn btn-secondary mt-4">Back to Workouts</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

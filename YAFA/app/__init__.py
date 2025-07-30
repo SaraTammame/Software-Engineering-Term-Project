@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
+import secrets
 
 load_dotenv()
 
@@ -18,6 +19,8 @@ def create_app():
     # Configure your database URI
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    # Secret key for sessions
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY") or secrets.token_hex(16)
 
     # Initialize the extension with the app
     db.init_app(app)
