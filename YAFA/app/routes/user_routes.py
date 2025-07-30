@@ -1,125 +1,183 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    session,
+)
 from app import db
 from app.model.user import User
-from app.model.workout import Workout
+from app.model.workout import Workout, add_workout
+from app.model.workout_name import WorkoutName
+from sqlalchemy import func
 from app.model.journal import Journal
-from app.model.model_example import test_insert
-from app.model.workout import add_workout
 
 # Create a Blueprint named 'user'
 user_bp = Blueprint("user", __name__)
 
 
-@user_bp.route("/", methods=["POST", "GET"])
+# ---------------------------
+# Authentication placeholder
+# ---------------------------
+@user_bp.route("/login", methods=["GET", "POST"])
+def login():
+    """Very simple login that stores a numeric user_id in the session."""
+    error_message = None
+    if request.method == "POST":
+        try:
+            user_id = int(request.form["user_id"])
+        except (KeyError, ValueError):
+            error_message = "Please enter a valid numeric User ID."
+        else:
+            if not User.query.get(user_id):
+                error_message = f"User with ID {user_id} does not exist."
+            else:
+                session["current_uid"] = user_id
+                # Redirect to original destination if provided
+                next_url = request.args.get("next")
+                return redirect(next_url or url_for("user.home"))
+    return render_template("login.html", error_message=error_message)
+
+
+@user_bp.route("/logout")
+def logout():
+    session.pop("current_uid", None)
+    return redirect(url_for("user.login"))
+
+
+# ---------------------------
+# Pages
+# ---------------------------
+@user_bp.route("/")
 def home():
     return render_template("home.html")
 
 
-@user_bp.route("/insert", methods=["POST"])
-def insert_sample_rows():
-    test_insert()
-    return render_template("insert.html")
-
-
-@user_bp.route("/auth", methods=["POST", "GET"])
-def auth():
-    return render_template("auth.html")
-
-
-@user_bp.route("/journal", methods=["POST", "GET"])
+@user_bp.route("/journal", methods=["GET", "POST"])
 def journal():
+    current_uid = session.get("current_uid")
+    if current_uid is None:
+        return redirect(url_for("user.login", next=request.path))
+
     users = User.query.all()
-    entry = Journal.query.all()
+    entry = Journal.query.filter_by(user_id=current_uid).all()
+    error_message = None
+
     if request.method == "POST":
         try:
-            user_id = int(request.form["user_id"])
             entry_date = request.form["entry_date"]
             entry_title = request.form["entry_title"]
             entry_content = request.form["entry_content"]
-        except ValueError:
-            error_message = "Invalid input: Please enter valid numbers for ID."
+        except KeyError:
+            error_message = "Missing form fields."
         else:
-            user = User.query.get(user_id)
-            if user is None:
-                error_message = f"User with ID {user_id} does not exist."
-            else:
-                new_entry = Journal(
-                    user_id=user_id,
-                    entry_date=entry_date,
-                    entry_title=entry_title,
-                    entry_content=entry_content,
-                )
-                db.session.add(new_entry)
-                db.session.commit()
-                return redirect(url_for("user.journal"))
+            new_entry = Journal(
+                user_id=current_uid,
+                entry_date=entry_date,
+                entry_title=entry_title,
+                entry_content=entry_content,
+            )
+            db.session.add(new_entry)
+            db.session.commit()
+            return redirect(url_for("user.journal"))
+
     return render_template(
-        "journal.html", user_query_result=users, journal_query_result=entry
-    )
-
-
-def add_journal_entry():
-
-    return render_template("journal.html")
-
-
-@user_bp.route("/data_base_test", methods=["GET"])
-def data_base_test():
-    test_insert()
-    users = User.query.all()
-    workouts = Workout.query.all()
-    return render_template(
-        "data_base_test.html",
+        "journal.html",
         user_query_result=users,
-        workout_query_result=workouts,
+        journal_query_result=entry,
+        current_uid=current_uid,
+        error_message=error_message,
     )
 
 
 @user_bp.route("/add_workout", methods=["GET", "POST"])
 def add_workout_page():
+    current_uid = session.get("current_uid")
+    if current_uid is None:
+        return redirect(url_for("user.login", next=request.path))
+
     error_message = None
+
     if request.method == "POST":
         try:
-            workout_id_str = request.form.get("workout_id")
-            user_id = int(request.form["user_id"])
             workout_date = request.form["workout_date"]
-            workout_type = request.form["workout_type"]
+            typed_name = request.form["workout_type"].strip()
             workout_duration = int(request.form["workout_duration"])
             workout_distance = float(request.form["workout_distance"])
             workout_calories = int(request.form["workout_calories"])
             workout_notes = request.form["workout_notes"]
-            workout_id = int(workout_id_str) if workout_id_str else None
         except ValueError:
-            error_message = "Invalid input: Please enter valid numbers for ID, duration, distance, and calories."
+            error_message = "Invalid numbers provided."
         else:
-            user = User.query.get(user_id)
-            if user is None:
-                error_message = f"User with ID {user_id} does not exist."
-            elif workout_id is not None and Workout.query.get(workout_id):
-                error_message = f"Workout with ID {workout_id} already exists."
-            else:
-                add_workout(
-                    user_id,
-                    workout_date,
-                    workout_type,
-                    workout_duration,
-                    workout_distance,
-                    workout_calories,
-                    workout_notes,
-                    workout_id=workout_id,
-                )
-                return redirect(url_for("user.add_workout_page"))
-    workouts = Workout.query.all()
+            # Find or create workout_name entry (global or user-specific)
+            name_obj = WorkoutName.query.filter(
+                func.lower(WorkoutName.name) == typed_name.lower(),
+                (
+                    (WorkoutName.user_id.is_(None))
+                    | (WorkoutName.user_id == current_uid)
+                ),
+            ).first()
+            if name_obj is None:
+                name_obj = WorkoutName(name=typed_name, user_id=current_uid)
+                db.session.add(name_obj)
+                db.session.commit()  # commit so we get its ID
+
+            add_workout(
+                current_uid,
+                workout_date,
+                typed_name,
+                workout_duration,
+                workout_distance,
+                workout_calories,
+                workout_notes,
+                name_id=name_obj.id,
+            )
+            return redirect(url_for("user.add_workout_page"))
+
+    workouts = Workout.query.filter_by(user_id=current_uid).all()
+    name_rows = (
+        WorkoutName.query.filter(
+            (WorkoutName.user_id.is_(None)) | (WorkoutName.user_id == current_uid)
+        )
+        .order_by(WorkoutName.name)
+        .all()
+    )
+    workout_names = [n.name for n in name_rows]
+
     return render_template(
-        "add_workout.html", workout_query_result=workouts, error_message=error_message
+        "add_workout.html",
+        workout_query_result=workouts,
+        error_message=error_message,
+        current_uid=current_uid,
+        workout_names=workout_names,
     )
 
 
-@user_bp.route("/progress", methods=["GET"])
+@user_bp.route("/progress")
 def progress():
-    workouts = Workout.query.order_by(Workout.workout_date).all()
+    current_uid = session.get("current_uid")
+    if current_uid is None:
+        return redirect(url_for("user.login", next=request.path))
+
+    workouts = (
+        Workout.query.filter_by(user_id=current_uid)
+        .order_by(Workout.workout_date)
+        .all()
+    )
     dates = [w.workout_date.strftime("%Y-%m-%d") for w in workouts]
     durations = [w.workout_duration for w in workouts]
     return render_template("progress.html", dates=dates, durations=durations)
+
+
+@user_bp.route("/workout/<int:workout_id>")
+def workout_detail(workout_id):
+    current_uid = session.get("current_uid")
+    if current_uid is None:
+        return redirect(url_for("user.login", next=request.path))
+
+    workout = Workout.query.filter_by(id=workout_id, user_id=current_uid).first_or_404()
+    return render_template("workout_detail.html", workout=workout)
 
 
 # register the blueprint

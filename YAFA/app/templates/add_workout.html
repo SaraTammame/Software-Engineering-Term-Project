@@ -10,6 +10,10 @@
 {% endblock %}
 
 {% block body %}
+
+
+
+{% if current_uid %}
 <div class="container py-5">
     <div class="row justify-content-center mb-5">
         <div class="col-lg-9">
@@ -18,21 +22,17 @@
                     <h2 class="h5 mb-4">Add New Workout</h2>
                     <form method="POST">
                         <div class="row g-3">
-                            <div class="col-md-4">
-                                <label for="workout_id" class="form-label">Workout ID</label>
-                                <input type="number" class="form-control" id="workout_id" name="workout_id">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="user_id" class="form-label">User ID</label>
-                                <input type="number" class="form-control" id="user_id" name="user_id" required>
-                            </div>
+
                             <div class="col-md-4">
                                 <label for="workout_date" class="form-label">Date</label>
                                 <input type="date" class="form-control" id="workout_date" name="workout_date" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="workout_type" class="form-label">Type</label>
-                                <input type="text" class="form-control" id="workout_type" name="workout_type" required>
+                                <div class="autocomplete-wrapper position-relative">
+                                    <input type="text" class="form-control" id="workout_type" name="workout_type" autocomplete="off" required>
+                                    <ul id="autocomplete-list" class="autocomplete-list"></ul>
+                                </div>
                             </div>
                             <div class="col-md-3">
                                 <label for="workout_duration" class="form-label">Duration (min)</label>
@@ -54,7 +54,53 @@
                                 <button type="submit" class="btn btn-primary">Add Workout</button>
                             </div>
                         </div>
+                        <datalist id="workout_names">
+                            {% for name in workout_names %}
+                                <option value="{{ name }}"></option>
+                            {% endfor %}
+                        </datalist>
                     </form>
+
+<script>
+const workoutNames = {{ workout_names|tojson }};
+const wrapper = document.querySelector('.autocomplete-wrapper');
+const input = document.getElementById('workout_type');
+const list = document.getElementById('autocomplete-list');
+
+function closeList() {
+  wrapper.classList.remove('open');
+  list.innerHTML = '';
+}
+
+document.addEventListener('click', (e) => {
+  if (!wrapper.contains(e.target)) closeList();
+});
+
+input.addEventListener('focus', () => wrapper.classList.add('glow'));
+input.addEventListener('blur', () => wrapper.classList.remove('glow'));
+
+input.addEventListener('input', function() {
+  const query = this.value.trim().toLowerCase();
+  closeList();
+  if (!query) return;
+  const matches = workoutNames.filter(n => n.toLowerCase().includes(query)).slice(0, 8);
+  if (matches.length) {
+    wrapper.classList.add('open');
+    matches.forEach((name) => {
+      const li = document.createElement('li');
+      li.className = 'autocomplete-item';
+      const regex = new RegExp(`(${query})`, 'ig');
+      li.innerHTML = name.replace(regex, '<strong>$1</strong>');
+      li.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        input.value = name;
+        closeList();
+      });
+      list.appendChild(li);
+    });
+  }
+});
+</script>
                     {% if error_message %}
                         <div class="alert alert-danger mt-3" role="alert">{{ error_message }}</div>
                     {% endif %}
@@ -64,41 +110,22 @@
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-lg-11">
-            <h2 class="h5 mb-3">All Workouts</h2>
-            <div class="table-responsive shadow-sm">
-                <table class="table table-striped align-middle mb-0">
-                    <thead style="background-color: var(--color-primary-light);" class="text-white">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Workout ID</th>
-                            <th scope="col">User ID</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Duration (min)</th>
-                            <th scope="col">Distance (km)</th>
-                            <th scope="col">Calories</th>
-                            <th scope="col">Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for workout in workout_query_result %}
-                        <tr>
-                            <td>{{ loop.index }}</td>
-                            <td>{{ workout.id }}</td>
-                            <td>{{ workout.user_id }}</td>
-                            <td>{{ workout.workout_date }}</td>
-                            <td>{{ workout.workout_type }}</td>
-                            <td>{{ workout.workout_duration }}</td>
-                            <td>{{ workout.workout_distance }}</td>
-                            <td>{{ workout.workout_calories }}</td>
-                            <td>{{ workout.workout_notes }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <div class="col-lg-9">
+            <h2 class="h5 mb-3">Your Workouts</h2>
+            <div class="list-group">
+                {% for workout in workout_query_result %}
+                <a href="{{ url_for('user.workout_detail', workout_id=workout.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ workout.workout_date }}</strong>
+                    </div>
+                    <span class="text-muted">{{ workout.workout_type }}</span>
+                </a>
+                {% else %}
+                <div class="text-center text-muted py-4">No workouts yet.</div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
+{% endif %}
 {% endblock %}

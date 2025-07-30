@@ -7,8 +7,16 @@ class Workout(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    # Optional foreign-key to the name catalogue; keeps existing fallback string
+    name_id = db.Column(db.Integer, db.ForeignKey("workout_name.id"), nullable=True)
+    workout_name = db.relationship("WorkoutName", back_populates="workouts")
+
     workout_date = db.Column(db.Date, nullable=False)
+
+    # Keep the free-text column for now to avoid breaking current flows
     workout_type = db.Column(db.String(80), nullable=False)
+
     workout_duration = db.Column(db.Integer, nullable=False)
     workout_distance = db.Column(db.Float, nullable=False)
     workout_calories = db.Column(db.Integer, nullable=False)
@@ -21,6 +29,7 @@ class Workout(db.Model):
         return {
             "id": self.id,
             "user_id": self.user_id,
+            "name_id": self.name_id,
             "workout_date": self.workout_date,
             "workout_type": self.workout_type,
             "workout_duration": self.workout_duration,
@@ -52,6 +61,7 @@ def add_workout(
     workout_calories,
     workout_notes,
     workout_id=None,
+    name_id=None,
 ):
 
     kwargs = {
@@ -65,6 +75,9 @@ def add_workout(
     }
     if workout_id is not None:
         kwargs["id"] = workout_id
+    if name_id is not None:
+        kwargs["name_id"] = name_id
+
     obj = Workout(**kwargs)
     db.session.add(obj)
     db.session.commit()
