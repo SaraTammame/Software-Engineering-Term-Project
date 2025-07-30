@@ -10,7 +10,7 @@
             <div class="col-md-6">
                 <h1 class="hero__title mb-4">Your Fitness Journey<br>Starts Here</h1>
                 <p class="hero__tagline mb-4">Log workouts, monitor progress, and stay motivated—all in one place.</p>
-                <a class="btn btn-primary btn-lg" href="{{ url_for('user.auth') }}">Get Started</a>
+                <a class="btn btn-primary btn-lg" href="{{ url_for('auth.login') }}">Get Started</a>
             </div>
             <div class="col-md-6 text-center">
                 <img src="https://via.placeholder.com/600x400?text=Fitness+Image" class="img-fluid" alt="Fitness illustration">
@@ -20,6 +20,7 @@
 {% endblock %}
 
 {% block body %}
+    
     <!-- Features Section -->
     <section class="container py-5">
         <h2 class="text-center mb-5">Why Choose YAFA?</h2>

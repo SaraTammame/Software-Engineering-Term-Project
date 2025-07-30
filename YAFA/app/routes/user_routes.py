@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for 
 from app import db
 from app.model.user import User
 from app.model.workout import Workout
@@ -21,9 +21,21 @@ def insert_sample_rows():
     return render_template("insert.html")
 
 
-@user_bp.route("/auth", methods=["POST", "GET"])
+@user_bp.route("/auth", methods=["GET", "POST"])
 def auth():
-    return render_template("auth.html")
+    error_message = None
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            error_message = "Invalid username."
+        elif user.password != password:
+            error_message = "Invalid password."
+        else:
+            # Successful login: you can set session/cookies here if needed
+            return redirect(url_for("user.home"))
+    return render_template("login.html", error_message=error_message)
 
 
 @user_bp.route("/journal", methods=["POST", "GET"])
@@ -43,6 +55,10 @@ def journal():
             if user is None:
                 error_message = f"User with ID {user_id} does not exist."
             else:
+                content = request.form.get('entry_content', '').strip()
+                if not content:
+                    error_message = "Content is required."
+                    return render_template("add_journal.html", error_message=error_message, journal_query_result=...), 400
                 new_entry = Journal(
                     user_id=user_id,
                     entry_date=entry_date,

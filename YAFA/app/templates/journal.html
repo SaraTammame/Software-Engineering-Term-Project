@@ -7,7 +7,8 @@
 {% endblock %}
 
 {% block body %}
-    <form method="POST" action="/journal">
+    <div class="card">
+        <form method="POST" action="/journal">
         {% if user_id %}
             <input type="hidden" name="user_id" value="{{ user_id }}">
         {% endif %}
@@ -22,14 +23,16 @@
         <div>
             <label for="log">Log</label>
             <textarea id="log" name="entry_content" required></textarea>
+            <span id="wordCount">Words: 0 / 250</span> 
         </div>
         <div>
             <label for="date">Date</label>
             <input type="date" id="date" name="entry_date" required>
         </div>
-        <button type="submit">Add Entry</button>
-    </form>
-    {% if error_message %}
+            <input class="btn btn-primary" type="submit" id="submission"  value="submit"/>
+        </form>
+    </div>
+        {% if error_message %}
     <div style="color: red;">{{ error_message }}</div>
     {% endif %}
 
