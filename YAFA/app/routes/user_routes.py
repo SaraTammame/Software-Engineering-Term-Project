@@ -13,6 +13,7 @@ from app.model.workout import Workout, add_workout
 from app.model.workout_name import WorkoutName
 from sqlalchemy import func
 from app.model.journal import Journal
+from datetime import datetime, timedelta, date
 
 # Create a Blueprint named 'user'
 user_bp = Blueprint("user", __name__)
@@ -25,6 +26,19 @@ user_bp = Blueprint("user", __name__)
 def home():
     if session.get("user_id"):
         # User is logged in, show dashboard
+        now = datetime.utcnow()
+        week_ago = now - timedelta(days=7)
+
+        journal_count = Journal.query.filter(
+        Journal.user_id == g.user.id,
+        Journal.entry_date >= week_ago
+        ).count()
+
+        workout_count = Workout.query.filter(
+        Workout.user_id == g.user.id,
+        Workout.workout_date >= week_ago
+        ).count()
+
         recent_journals = (
         Journal.query
         .filter_by(user_id=g.user.id)
@@ -32,7 +46,10 @@ def home():
         .limit(5)
         .all()
     )
-        return render_template("dashboard.html", recent_journals=recent_journals)
+        return render_template("dashboard.html", 
+                               recent_journals=recent_journals,
+                               journal_count=journal_count,
+                               workout_count=workout_count)
     else:
         # User is not logged in, show public home
         return render_template("home.html")
