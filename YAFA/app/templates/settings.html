@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Notification Settings{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Notification Settings</h1>
+    <div>
+      <!-- Changed to a safe endpoint for now -->
+      <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary me-2">
+        Back to Login
+      </a>
+      <!-- Button to trigger scheduling all notifications -->
+      <a href="{{ url_for('notifications.schedule_all') }}" class="btn btn-primary">
+        Schedule All Notifications
+      </a>
+    </div>
+  </div>
+
+  {% if prefs %}
+    {% for pref in prefs %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ pref.name or 'Reminder' }}</h5>
+          <p class="card-text"><strong>Time:</strong> {{ pref.time.strftime('%I:%M %p') }}</p>
+          <p class="card-text">
+            <strong>Enabled:</strong>
+            {% if pref.enabled %}
+              <span class="text-success">Yes</span>
+            {% else %}
+              <span class="text-muted">No</span>
+            {% endif %}
+          </p>
+          <a href="{{ url_for('notifications.edit', id=pref.id) }}" class="btn btn-primary me-2">
+            Edit
+          </a>
+          <form method="POST" action="{{ url_for('notifications.delete', id=pref.id) }}" class="d-inline">
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>You have no notification preferences set up yet.</p>
+  {% endif %}
+</div>
+{% endblock %}
