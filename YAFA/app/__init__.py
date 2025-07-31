@@ -16,6 +16,7 @@ migrate = Migrate()
 
 
 def create_app():
+    from app.notifications import notifications_bp
 
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -55,6 +56,8 @@ def create_app():
 
     user_routes.register_blueprints(app)
     app.register_blueprint(auth.bp)
+    app.register_blueprint(notifications_bp)
+    # print(app.url_map)
 
     # from app.notifications.notifications import init_notifications
 

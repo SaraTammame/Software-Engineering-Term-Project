@@ -1,9 +1,17 @@
+# notifications.py
 from flask import Flask
 from flask_apscheduler import APScheduler
 from app.model.notifications_preferences import NotificationPreference
 from app.model.user import User
 import smtplib
 from email.message import EmailMessage
+# at the top of notifications.py
+from flask import Blueprint, render_template, session, redirect, url_for, request, flash
+from app.model.notifications_preferences import NotificationPreference
+
+
+notifications_bp = Blueprint('notifications', __name__, url_prefix='/notifications')
+
 
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
@@ -157,6 +165,32 @@ def main():
 
     # wait for the email job to fire
     time.sleep(5)
+
+
+@notifications_bp.route('/settings')
+def settings():
+    current_uid = session.get('current_uid')
+    if current_uid is None:
+        return redirect(url_for('auth.login', next=request.path))
+    prefs = []# NotificationPreference.query.filter_by(user_id=current_uid).all()
+    return render_template('settings.html', prefs=prefs)
+
+
+@notifications_bp.route('/schedule_all')
+def schedule_all():
+    current_uid = session.get('current_uid')
+    if current_uid is None:
+        return redirect(url_for('auth.login', next=request.path))
+
+    # Schedule user-defined prefs (if model exists) and daily reminders
+    try:
+        schedule_notifications(current_uid)
+    except:
+        pass
+    schedule_daily_reminders(current_uid)
+
+    flash('Notifications have been scheduled!', 'success')
+    return redirect(url_for('notifications.settings'))
 
 
 if __name__ == "__main__":
