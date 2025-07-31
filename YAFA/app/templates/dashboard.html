@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}{{ g.user.username }}'s Dashboard{% endblock %}
+
+{% block header %}
+<section class="container py-4 text-center">
+    <h1 class="mb-3">Welcome, {{ g.user.username }}!</h1>
+    <p class="lead">This is your dashboard.</p>
+</section>
+{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Example: User quick stats -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Your Stats</h5>
+                    <p class="card-text">Workouts: ...</p>
+                    <p class="card-text">Journals: ...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <!-- Example: Recent activity or dashboard widgets -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Activity</h5>
+                    <p class="card-text">No recent activity yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Journals Section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Recent Journals</h5>
+            {% if recent_journals %}
+                <ul class="list-group list-group-flush">
+                    {% for journal in recent_journals %}
+                        <li class="list-group-item">
+                            <strong>{{ journal.entry_date.strftime('%Y-%m-%d') }}</strong>:
+                            {{ journal.entry_title }}
+                            <br>
+                            <span class="text-muted small">{{ journal.entry_content[:100] }}{% if journal.entry_content|length > 100 %}...{% endif %}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">No journal entries yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

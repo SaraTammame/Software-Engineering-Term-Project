@@ -1,9 +1,10 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, g, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
 import secrets
+
 
 # right now this will throw an error when ran
 # from app.notifications.notifications import init_notifications
@@ -30,11 +31,23 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
+    
+
     # --- Import models so they are registered with SQLAlchemy metadata ---
     # NOTE: Importing *after* init_app prevents circular-import issues.
     with app.app_context():
         # Import order matters to avoid circular dependencies
         from app.model import user, journal, workout, workout_name  # noqa: F401
+        from app.model.user import User
+    
+    @app.before_request
+    def load_logged_in_user():
+        user_id = session.get("user_id")
+
+        if user_id is None:
+            g.user = None
+        else:
+            g.user = User.query.get(user_id)
 
     # register the blueprints
     from app.routes import user_routes

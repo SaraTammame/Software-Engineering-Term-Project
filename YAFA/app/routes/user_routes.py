@@ -5,6 +5,7 @@ from flask import (
     redirect,
     url_for,
     session,
+    g
 )
 from app import db
 from app.model.user import User
@@ -22,7 +23,20 @@ user_bp = Blueprint("user", __name__)
 # ---------------------------
 @user_bp.route("/")
 def home():
-    return render_template("home.html")
+    if session.get("user_id"):
+        # User is logged in, show dashboard
+        recent_journals = (
+        Journal.query
+        .filter_by(user_id=g.user.id)
+        .order_by(Journal.entry_date.desc())
+        .limit(5)
+        .all()
+    )
+        return render_template("dashboard.html", recent_journals=recent_journals)
+    else:
+        # User is not logged in, show public home
+        return render_template("home.html")
+
 
 
 @user_bp.route("/insert", methods=["POST"])
