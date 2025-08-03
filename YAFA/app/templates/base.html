@@ -34,15 +34,13 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountMenu">
                                 {% if g.user %}
-                                <li><span class="dropdown-item">{{ g.user['username'] }}</span>
-                                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Log Out</a>
+                                <li><span class="dropdown-item">{{ g.user['username'] }}</span></li>
+                                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Log Out</a></li>
                                 {% else %}
-                                <li><a class = "dropdown-item" href="{{ url_for('auth.register') }}">Register</a>
-                                <li><a class = "dropdown-item" href="{{ url_for('auth.login') }}">Log In</a>
+                                <li><a class = "dropdown-item" href="{{ url_for('auth.register') }}">Register</a></li>
+                                <li><a class = "dropdown-item" href="{{ url_for('auth.login') }}">Log In</a></li>
                                 {% endif %}
                                 <li><a class="dropdown-item" href="{{ url_for('notifications.settings') }}">Settings</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -84,9 +82,14 @@
                         <i class="bi bi-person-circle fs-4"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountMenuMobile">
+                        {% if g.user %}
+                        <li><span class="dropdown-item">{{ g.user['username'] }}</span></li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Log Out</a></li>
+                        {% else %}
+                        <li><a class="dropdown-item" href="{{ url_for('auth.register') }}">Register</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.login') }}">Log In</a></li>
+                        {% endif %}
                         <li><a class="dropdown-item" href="{{ url_for('notifications.settings') }}">Settings</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
                     </ul>
                 </div>
             </div>

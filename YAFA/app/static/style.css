@@ -388,3 +388,8 @@
     height:6px;
     background-color: var(--color-primary);
   }
+  
+  .dropdown-menu .dropdown-item {
+    color: #212529; 
+    font-size: 1rem; /* Bootstrap default */
+  }
