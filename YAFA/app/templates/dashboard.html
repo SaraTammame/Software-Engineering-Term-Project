@@ -3,9 +3,9 @@
 {% block title %}{{ g.user.username }}'s Dashboard{% endblock %}
 
 {% block header %}
-<section class="container py-4 text-center">
-    <h1 class="mb-3">Welcome, {{ g.user.username }}!</h1>
-    <p class="lead">This is your dashboard.</p>
+<section class="container py-5 text-center">
+    <h1 class="hero__title mb-3">Welcome, {{ g.user.username }}!</h1>
+    <p class="hero__tagline">Here’s an overview of your recent activity.</p>
 </section>
 {% endblock %}
 
@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-md-4">
             <!-- Example: User quick stats -->
-            <div class="card mb-4">
+            <div class="card mb-4 shadow-sm border-0">
                 <div class="card-body">
                     <h5 class="card-title">Your Stats</h5>
                     <p class="card-text">Workouts (past week): {{ workout_count }}</p>
@@ -24,7 +24,7 @@
         </div>
         <div class="col-md-8">
             <!-- Example: Recent activity or dashboard widgets -->
-            <div class="card mb-4">
+            <div class="card mb-4 shadow-sm border-0">
                 <div class="card-body">
                     <h5 class="card-title">Recent Activity</h5>
                     <p class="card-text">No recent activity yet.</p>
@@ -34,7 +34,7 @@
     </div>
 
     <!-- Recent Journals Section -->
-    <div class="card mb-4">
+    <div class="card mb-4 shadow-sm border-0">
         <div class="card-body">
             <h5 class="card-title">Recent Journals</h5>
             {% if recent_journals %}

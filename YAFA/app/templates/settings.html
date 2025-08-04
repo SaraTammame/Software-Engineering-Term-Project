@@ -3,9 +3,14 @@
 {% block title %}Notification Settings{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>Notification Settings</h1>
+<section class="container py-5 text-center">
+  <h1 class="hero__title mb-3">Notification Settings</h1>
+  <p class="hero__tagline">Manage your reminders and scheduling preferences.</p>
+</section>
+
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    
     <div>
       <!-- Changed to a safe endpoint for now -->
       <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary me-2">
@@ -20,7 +25,7 @@
 
   {% if prefs %}
     {% for pref in prefs %}
-      <div class="card mb-3">
+      <div class="card mb-3 shadow-sm border-0">
         <div class="card-body">
           <h5 class="card-title">{{ pref.name or 'Reminder' }}</h5>
           <p class="card-text"><strong>Time:</strong> {{ pref.time.strftime('%I:%M %p') }}</p>

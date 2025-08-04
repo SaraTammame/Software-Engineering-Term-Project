@@ -5,18 +5,28 @@ from app.model.notifications_preferences import NotificationPreference
 from app.model.user import User
 import smtplib
 from email.message import EmailMessage
+
 # at the top of notifications.py
-from flask import Blueprint, render_template, session, redirect, url_for, request, flash
+from flask import (
+    Blueprint,
+    render_template,
+    session,
+    redirect,
+    url_for,
+    request,
+    flash,
+    g,
+)
 from app.model.notifications_preferences import NotificationPreference
 
 
-notifications_bp = Blueprint('notifications', __name__, url_prefix='/notifications')
+notifications_bp = Blueprint("notifications", __name__, url_prefix="/notifications")
 
 
-SMTP_SERVER = 'smtp.gmail.com'
+SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-SMTP_USER = 'yafawebsite@gmail.com'
-SMTP_PASS = 'qsit qdze utlr bqwe'
+SMTP_USER = "yafawebsite@gmail.com"
+SMTP_PASS = "qsit qdze utlr bqwe"
 # qsit qdze utlr bqwe
 
 scheduler = APScheduler()
@@ -25,9 +35,9 @@ scheduler = APScheduler()
 def send_notification(subject: str, body: str, to: str) -> None:
     """Send an email via SMTP."""
     msg = EmailMessage()
-    msg['Subject'] = subject
-    msg['From'] = SMTP_USER
-    msg['To'] = to
+    msg["Subject"] = subject
+    msg["From"] = SMTP_USER
+    msg["To"] = to
     msg.set_content(body)
 
     with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as smtp:
@@ -45,20 +55,20 @@ def schedule_notifications(user_id: int) -> None:
         if not user_email:
             continue
 
-        for time_str in pref.times.split(','):  # e.g. "08:00,12:00,18:00"
-            hour, minute = map(int, time_str.split(':'))
-            job_id = f"user{user_id}-{pref.reminder_type}-{time_str}".replace(':', '')
+        for time_str in pref.times.split(","):  # e.g. "08:00,12:00,18:00"
+            hour, minute = map(int, time_str.split(":"))
+            job_id = f"user{user_id}-{pref.reminder_type}-{time_str}".replace(":", "")
             scheduler.add_job(
                 id=job_id,
                 func=send_notification,
                 args=[
                     f"{pref.reminder_type.title()} Reminder",
                     pref.message,
-                    user_email
+                    user_email,
                 ],
-                trigger='cron',
+                trigger="cron",
                 hour=hour,
-                minute=minute
+                minute=minute,
             )
 
 
@@ -68,7 +78,7 @@ def send_water_reminder(user_id: int) -> None:
         send_notification(
             subject="Hydration Reminder",
             body=f"Hi {user.username}, remember to drink water and stay hydrated!",
-            to=user.email
+            to=user.email,
         )
 
 
@@ -78,7 +88,7 @@ def send_steps_reminder(user_id: int) -> None:
         send_notification(
             subject="Steps Reminder",
             body=f"Hi {user.username}, make sure to get enough steps in today!",
-            to=user.email
+            to=user.email,
         )
 
 
@@ -88,7 +98,7 @@ def send_nutrients_reminder(user_id: int) -> None:
         send_notification(
             subject="Nutrition Reminder",
             body=f"Hi {user.username}, don't forget to eat a balanced diet with enough nutrients!",
-            to=user.email
+            to=user.email,
         )
 
 
@@ -98,31 +108,31 @@ def schedule_daily_reminders(user_id: int) -> None:
         id=f"water-reminder-{user_id}",
         func=send_water_reminder,
         args=[user_id],
-        trigger='cron',
-        hour=9,   # 9 AM daily
-        minute=0
+        trigger="cron",
+        hour=9,  # 9 AM daily
+        minute=0,
     )
     scheduler.add_job(
         id=f"steps-reminder-{user_id}",
         func=send_steps_reminder,
         args=[user_id],
-        trigger='cron',
+        trigger="cron",
         hour=12,  # 12 PM daily
-        minute=0
+        minute=0,
     )
     scheduler.add_job(
         id=f"nutrients-reminder-{user_id}",
         func=send_nutrients_reminder,
         args=[user_id],
-        trigger='cron',
+        trigger="cron",
         hour=18,  # 6 PM daily
-        minute=0
+        minute=0,
     )
 
 
 def init_notifications(app: Flask) -> None:
     """Initialize APScheduler and schedule all reminders for every user."""
-    app.config.setdefault('SCHEDULER_API_ENABLED', True)
+    app.config.setdefault("SCHEDULER_API_ENABLED", True)
     scheduler.init_app(app)
 
     # ensure we're in app context for DB queries
@@ -143,21 +153,21 @@ def main():
     send_notification(
         subject="Test Notification",
         body="This is a direct test notification via email.",
-        to="minh.tran@ufl.edu"
+        to="minh.tran@ufl.edu",
     )
 
     # Scheduled email test (3 seconds from now)
     run_at = datetime.datetime.now() + datetime.timedelta(seconds=3)
     scheduler.add_job(
-        id='email-test',
+        id="email-test",
         func=send_notification,
         args=[
             "Scheduled Test Notification",
             "This is a 3-second scheduled test email.",
-            "minh.tran@ufl.edu"
+            "minh.tran@ufl.edu",
         ],
-        trigger='date',
-        run_date=run_at
+        trigger="date",
+        run_date=run_at,
     )
 
     scheduler.init_app(Flask(__name__))  # minimal app for scheduler
@@ -167,20 +177,21 @@ def main():
     time.sleep(5)
 
 
-@notifications_bp.route('/settings')
+from app.routes.auth import login_required
+
+
+@notifications_bp.route("/settings")
+@login_required
 def settings():
-    current_uid = session.get('current_uid')
-    if current_uid is None:
-        return redirect(url_for('auth.login', next=request.path))
-    prefs = []# NotificationPreference.query.filter_by(user_id=current_uid).all()
-    return render_template('settings.html', prefs=prefs)
+    current_uid = g.user.id
+    prefs = []  # TODO: load user prefs once model is integrated
+    return render_template("settings.html", prefs=prefs)
 
 
-@notifications_bp.route('/schedule_all')
+@notifications_bp.route("/schedule_all")
+@login_required
 def schedule_all():
-    current_uid = session.get('current_uid')
-    if current_uid is None:
-        return redirect(url_for('auth.login', next=request.path))
+    current_uid = g.user.id
 
     # Schedule user-defined prefs (if model exists) and daily reminders
     try:
@@ -189,8 +200,8 @@ def schedule_all():
         pass
     schedule_daily_reminders(current_uid)
 
-    flash('Notifications have been scheduled!', 'success')
-    return redirect(url_for('notifications.settings'))
+    flash("Notifications have been scheduled!", "success")
+    return redirect(url_for("notifications.settings"))
 
 
 if __name__ == "__main__":
