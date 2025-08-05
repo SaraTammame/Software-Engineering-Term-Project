@@ -1,12 +1,9 @@
-# python version 3.13
 flask
 flask-sqlalchemy
 psycopg2-binary
 python-dotenv
 flask-migrate
 Flask-APScheduler
-
-# Testing dependencies
 pytest
 pytest-flask
 pytest-cov
