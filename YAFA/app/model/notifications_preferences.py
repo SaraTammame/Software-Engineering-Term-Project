@@ -1,16 +1,12 @@
 from app import db
 
-
-class NotificationPreference(
-    db.Model
-):  # many preferences to one user; each preference is for a certain notif type
+class NotificationPreference(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    reminder_type = db.Column(db.String(80), nullable=False)
-    times = db.Column(
-        db.String, nullable=False
-    )  # represent as csv strings, e.g, "08:00,12:00,18:00"
+    reminder_type = db.Column(db.String(80), nullable=False)  # e.g., 'email', 'sms'
+    times = db.Column(db.String, nullable=False)  # CSV times, e.g., "08:00,12:00"
     message = db.Column(db.String, nullable=False)
+    email_enabled = db.Column(db.Boolean, default=True)  # enable/disable email notifications
 
     def __repr__(self):
         return f"<NotificationPreference {self.reminder_type} for user {self.user_id}>"
@@ -22,4 +18,5 @@ class NotificationPreference(
             "reminder_type": self.reminder_type,
             "times": self.times.split(","),
             "message": self.message,
+            "email_enabled": self.email_enabled,
         }
