@@ -100,6 +100,23 @@ def send_nutrients_reminder(user_id: int) -> None:
             body=f"Hi {user.username}, don't forget to eat a balanced diet with enough nutrients!",
             to=user.email,
         )
+def send_motivation_reminder(user_id: int) -> None:
+    user = User.query.get(user_id)
+    if user and user.email:
+        motivation_quotes = [
+            "Keep pushing forward, you are doing great!",
+            "Every step counts — stay motivated!",
+            "Believe in yourself and all that you are.",
+            "Your body can stand almost anything — it’s your mind you have to convince.",
+            "Consistency is key — keep going!",
+        ]
+        # Pick a quote based on user ID to vary messages (simple approach)
+        quote = motivation_quotes[user_id % len(motivation_quotes)]
+        send_notification(
+            "Motivation Reminder",
+            f"Hi {user.username}, here's a motivation boost for you:\n\n{quote}",
+            user.email,
+        )
 
 
 def schedule_daily_reminders(user_id: int) -> None:
@@ -170,7 +187,8 @@ def main():
         run_date=run_at,
     )
 
-    scheduler.init_app(Flask(__name__))  # minimal app for scheduler
+    app = Flask(__name__)
+    scheduler.init_app(app)
     scheduler.start()
 
     # wait for the email job to fire
