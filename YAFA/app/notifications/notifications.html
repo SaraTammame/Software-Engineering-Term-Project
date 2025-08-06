@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Your Notifications</h2>
+
+  {% if notifications %}
+  <ul class="notifications-list list-group">
+    {% for note in notifications %}
+    <li class="list-group-item d-flex justify-content-between align-items-center notification-item
+          {% if not note.read %}notification-unread{% endif %}">
+      <div>
+        <strong>{{ note.title }}</strong>
+        <p class="mb-1">{{ note.message }}</p>
+        <small class="text-muted">{{ note.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+      </div>
+      <button class="btn btn-sm btn-outline-secondary btn-dismiss" data-id="{{ note.id }}">
+        Dismiss
+      </button>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="text-muted">You have no notifications.</p>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+{% endblock %}
