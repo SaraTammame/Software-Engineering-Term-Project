@@ -129,3 +129,41 @@ input.addEventListener('input', function() {
 </div>
 {% endif %}
 {% endblock %}
+
+<!-- Workout Location -->
+<div class="form-group">
+    <label for="workout_location">Location</label>
+    <div class="input-group">
+        <input type="text" class="form-control" id="workout_location" name="workout_location" placeholder="Enter location or use button">
+        <div class="input-group-append">
+            <button type="button" id="btn-add-location" class="btn btn-secondary">Add Location</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("btn-add-location").addEventListener("click", () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                const lat = pos.coords.latitude.toFixed(5);
+                const lon = pos.coords.longitude.toFixed(5);
+
+                // Fill input
+                document.getElementById("workout_location").value = `${lat}, ${lon}`;
+
+                // Optionally send to backend immediately
+                fetch("/save_location", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        workout_id: "{{ workout.id if workout else '' }}",
+                        latitude: lat,
+                        longitude: lon
+                    })
+                });
+            });
+        } else {
+            alert("Geolocation not supported.");
+        }
+    });
+</script>
